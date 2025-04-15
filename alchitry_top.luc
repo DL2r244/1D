@@ -101,7 +101,6 @@ module alchitry_top (
         
 
         
-        //seg_multiplex.d = seg_multiplex.q
         slow_clock_edge.in = slow_clk.value
         state.d = state.q
         if (rst) {
