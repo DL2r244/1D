@@ -1,0 +1,19 @@
+// A full adder combinational logic unit 
+module fa (
+    input a,
+    input b,
+    input cin,
+    output s,
+    output cout
+) {
+    
+    always {
+        // Compute s using XOR
+        s = a ^ b ^ cin
+        
+        // Compute cout using a 3-input OR with 3 ANDs 
+        cout = ((a & b) | (b & cin) | (a && cin))
+        
+    }
+    
+}

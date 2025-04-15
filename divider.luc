@@ -1,0 +1,42 @@
+// divide a by b
+module divider (
+    input a[32], // dividend
+    input b[32], // divisor
+    output d[32] // a/b
+  ) {
+    
+    sig a_msb;
+    sig b_msb;
+    sig d_msb;
+    sig temp_a[32];
+    sig temp_b[32];
+    sig temp_d[32];
+  always {
+        a_msb = a[31];
+        b_msb = b[31];
+        if (a_msb == 1){
+            temp_a = ~a + 1;
+        }
+        else{
+            temp_a = a;
+        }
+        if (b_msb == 1){
+            temp_b = ~b + 1;
+        }
+        else{
+            temp_b = b;
+        }
+        temp_d = temp_a/temp_b;
+        
+        // Determine if the result should be negative
+        d_msb = a_msb ^ b_msb; // XOR for sign determination
+
+        // Convert result back to negative if needed
+        if (d_msb == 1) {
+            d = ~temp_d + 1;
+        }
+        else{
+            d = temp_d;
+        }
+  }
+}

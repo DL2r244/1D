@@ -1,0 +1,47 @@
+module shifter (
+    input a[32],
+    input b[5],
+    input alufn[6],
+    output shift[32]
+) {
+    x_bit_left_shifter shl[5](#SHIFT({8d16,8d8,8d4,8d2,8d1})) 
+    mux_2 inp_mux[32];
+    mux_2 pad_mux[32];
+    mux_2 shift_mux[32];
+    
+    sig ra[32];
+    sig rshl[32];
+    
+    always {
+        //right shift
+        ra = $reverse(a)
+        rshl = $reverse(shl.out[4])
+        
+        repeat(i,32){
+            inp_mux.in[i][0] = a[i]
+            inp_mux.in[i][1] = ra[i] 
+            inp_mux.s0[i] = alufn[0]
+            
+            pad_mux.in[i][0] = 1b0
+            pad_mux.in[i][1] = a[31]
+            pad_mux.s0[i] = alufn[1] 
+            
+            shift_mux.in[i][0] = shl.out[4][i]
+            shift_mux.in[i][1] = rshl[i]
+            shift_mux.s0[i] = alufn[0]
+        }
+               
+        repeat(i,5){
+            if(i==0) {
+                shl.a[i] = inp_mux.out
+                shl.shift[i] = b[i]
+                shl.pad[i] = pad_mux.out
+            } else {
+                shl.a[i] = shl.out[i-1]
+                shl.shift[i] = b[i]
+                shl.pad[i] = pad_mux.out
+            }
+        }                  
+        shift = shift_mux.out
+    } 
+}
