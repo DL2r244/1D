@@ -50,7 +50,7 @@ module alchitry_top (
             dff counter2[28]
             dff counter3[5](#INIT(5))
             dff io_led1_ff(#INIT(0))
-            dff lives[5](#INIT(0))
+            dff score[5](#INIT(0))
             dff button_handler[3](#INIT(0))
             counter slow_clk(#SIZE(1), #DIV(CLOCK_DIVIDER))
             counter slow_clk2(#SIZE(1), #DIV(SLOW_CLK))
@@ -91,7 +91,7 @@ module alchitry_top (
         usb_tx = usb_rx         // loop serial port
         counter.d = counter.q
         counter2.d = counter2.q+ 1
-        lives.d = lives.q
+        score.d = score.q
 
         
         
@@ -125,10 +125,10 @@ module alchitry_top (
     // Check which LED index is active and which button is pressed
         if (lit_led_index == 1 && button_1_edge.out) {
             disable_led_ff.d = !disable_led_ff.q
-            alu.a = lives.q;
+            alu.a = score.q;
             alu.b = 1;
             alu.alufn = 6b000000;
-            lives.d = alu.out;
+            score.d = alu.out;
             
                 
              
@@ -136,24 +136,24 @@ module alchitry_top (
         } else if (lit_led_index == 2 && button_2_edge.out) {
             disable_led_ff.d = !disable_led_ff.q
                
-            alu.a = lives.q;
+            alu.a = score.q;
             alu.b = 1;
             alu.alufn = 6b000000;
-            lives.d = alu.out;
+            score.d = alu.out;
                
         } else if (lit_led_index == 3 && button_3_edge.out) {
             disable_led_ff.d = !disable_led_ff.q
-             alu.a = lives.q;
+             alu.a = score.q;
             alu.b = 1;
             alu.alufn = 6b000000;
-            lives.d = alu.out;
+            score.d = alu.out;
                
         } else if (lit_led_index == 4 && button_4_edge.out) {
              disable_led_ff.d = !disable_led_ff.q
-              alu.a = lives.q;
+              alu.a = score.q;
             alu.b = 1;
             alu.alufn = 6b000000;
-            lives.d = alu.out;            
+            score.d = alu.out;            
         } 
           
        
@@ -173,7 +173,7 @@ module alchitry_top (
              disable_led_ff.d = 0;  // Re-enable LED
         }
        
-        if(lives.q == 3){
+        if(score.q == 3){
             disable_led_ff.d = 1
         }
         
@@ -198,7 +198,7 @@ module alchitry_top (
         
         case(state.q){
             States.LEVEL1:
-            io_led[2][lives.q] = 1
+            io_led[2][score.q] = 1
                 if (disable_led) {
                     io_led[1] = 8h00   // Turn off io_led[1]
                 } else {
@@ -215,7 +215,7 @@ module alchitry_top (
               
             States.LEVEL2:
           
-                io_led[2][lives.q] = 1
+                io_led[2][score.q] = 1
                 if (disable_led) {
                     io_led[1] = 8h00   // Turn off io_led[1]
                 } else {
@@ -232,7 +232,7 @@ module alchitry_top (
                 state.d = States.LEVEL3    
                 }
             States.LEVEL3:
-                io_led[2][lives.q] = 1
+                io_led[2][score.q] = 1
                 if (disable_led) {
                     io_led[1] = 8h00   // Turn off io_led[1]
                 } else {
